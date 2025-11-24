@@ -100,7 +100,7 @@ bool vl53l1xInit(VL53L1_Dev_t *pdev, I2C_Dev *I2cHandle)
 	//VL53L1_StopMeasurement(pdev);
 	//status = VL53L1_SetDistanceMode(pdev,VL53L1_DISTANCEMODE_LONG);
 	//status = VL53L1_SetMeasurementTimingBudgetMicroSeconds(pdev, 160000);
-	//status = VL53L1_SetInterMeasurementPeriodMilliSeconds(pdev, 200);
+	//status = VL53L1_SetInterMeasurementPeriodMilliSeconds(pdev, 200);  
 	//status = VL53L1_StartMeasurement(pdev);
 
   return status == VL53L1_ERROR_NONE;
@@ -125,7 +125,7 @@ VL53L1_Error vl53l1xSetI2CAddress(VL53L1_Dev_t* pdev, uint8_t address)
 {
   VL53L1_Error status = VL53L1_ERROR_NONE;
 
-  status = VL53L1_SetDeviceAddress(pdev, (address << 1));
+  status = VL53L1_SetDeviceAddress(pdev, address);
   pdev->I2cDevAddr = address;
   return  status;
 }
@@ -402,3 +402,4 @@ VL53L1_Error VL53L1_WaitValueMaskEx(
 
 	return status;
 }
+
