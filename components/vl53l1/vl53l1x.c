@@ -37,6 +37,7 @@
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "freertos/portmacro.h"
 #include "esp_log.h"
 
 #include "i2cdev.h"
@@ -48,7 +49,8 @@
 
 
 // Set the start address 8 step after the VL53L0 dynamic addresses
-//static int nextI2CAddress = VL53L1X_DEFAULT_ADDRESS+8;
+static int nextI2CAddress = VL53L1X_DEFAULT_ADDRESS+8;
+static portMUX_TYPE vl53l1_mux = portMUX_INITIALIZER_UNLOCKED;
 
 
 bool vl53l1xInit(VL53L1_Dev_t *pdev, I2C_Dev *I2cHandle)
@@ -60,13 +62,13 @@ bool vl53l1xInit(VL53L1_Dev_t *pdev, I2C_Dev *I2cHandle)
   i2cdevInit(pdev->I2Cx);
 
   /* Move initialized sensor to a new I2C address */
-  //int newAddress;
+  int newAddress;
 
-  //taskENTER_CRITICAL();
-  //newAddress = nextI2CAddress++;
-  //taskEXIT_CRITICAL();
+  taskENTER_CRITICAL(&vl53l1_mux);
+  newAddress = nextI2CAddress++;
+  taskEXIT_CRITICAL(&vl53l1_mux);
 
-  //vl53l1xSetI2CAddress(pdev, newAddress);
+  vl53l1xSetI2CAddress(pdev, newAddress);
 
   uint8_t byteData;
   uint16_t wordData;
